@@ -20,6 +20,8 @@ class User_controller:
         with open("users.json") as f:
             users = json.load(f)
 
+        users = sorted(users, key=lambda x: x["id"])
+
         if users:
             for i in range(len(users) - 1):
                 if users[i]["id"] + 1 != users[i + 1]["id"]:
