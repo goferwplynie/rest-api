@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask.typing import ResponseReturnValue
-from controller import User_controller
+from app.controller import User_controller
 
 app = Flask(__name__)
 

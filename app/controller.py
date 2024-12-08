@@ -1,23 +1,24 @@
 import json
 from flask import request, jsonify
+from flask.typing import ResponseReturnValue
 
 
 class User_controller:
     @staticmethod
-    def get_user(user_id: int = None) -> dict:
-        with open("users.json") as f:
+    def get_user(user_id: int = None) -> ResponseReturnValue:
+        with open("./app/users.json") as f:
             users = json.load(f)
         if user_id != None:
             for user in users:
                 if user["id"] == user_id:
                     return jsonify(user)
-            return jsonify({"message": "User not found"}), 400
-        return users
+            return "", 400
+        return jsonify(users)
 
     @staticmethod
-    def add_user(user: dict) -> dict:
+    def add_user(user: dict) -> ResponseReturnValue:
         user_id = None
-        with open("users.json") as f:
+        with open("./app/users.json") as f:
             users = json.load(f)
 
         users = sorted(users, key=lambda x: x["id"])
@@ -35,43 +36,43 @@ class User_controller:
 
         user["id"] = user_id
         users.append(user)
-        with open("users.json", "w") as f:
+        with open("./app/users.json", "w") as f:
             json.dump(users, f)
-        return "", 201
+        return jsonify(user), 201
 
     @staticmethod
-    def update_user(user_id: int, user: dict) -> dict:
-        with open("users.json") as f:
+    def update_user(user_id: int, user: dict) -> ResponseReturnValue:
+        with open("./app/users.json") as f:
             users = json.load(f)
         key = list(user.keys())[0]
         for i in range(len(users)):
             if users[i]["id"] == user_id:
                 users[i][key] = user[key]
-                with open("users.json", "w") as f:
+                with open("./app/users.json", "w") as f:
                     json.dump(users, f)
-                return "", 204
+                return jsonify(users[i]), 204
         return "", 400
 
     @staticmethod
-    def put_user(user_id: int, user: dict) -> dict:
-        with open("users.json") as f:
+    def put_user(user_id: int, user: dict) -> ResponseReturnValue:
+        with open("./app/users.json") as f:
             users = json.load(f)
         for i in range(len(users)):
             if users[i]["id"] == user_id:
                 user["id"] = user_id
                 users[i] = user
-                with open("users.json", "w") as f:
+                with open("./app/users.json", "w") as f:
                     json.dump(users, f)
                 return "", 204
 
     @staticmethod
-    def delete_user(user_id: int):
-        with open("users.json") as f:
+    def delete_user(user_id: int) -> ResponseReturnValue:
+        with open("./app/users.json") as f:
             users: list = json.load(f)
         for i in range(len(users)):
             if users[i]["id"] == user_id:
                 users.pop(i)
-                with open("users.json", "w") as f:
+                with open("./app/users.json", "w") as f:
                     json.dump(users, f)
                 return "", 204
         return "", 400
