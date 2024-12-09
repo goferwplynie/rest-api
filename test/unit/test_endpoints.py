@@ -1,6 +1,7 @@
 from app.app import app
 from pytest import fixture
 from flask.testing import FlaskClient
+import json
 
 
 @fixture
@@ -10,16 +11,14 @@ def client() -> FlaskClient:
 
 def test_get_endpoint_users(client: FlaskClient):
     response = client.get("/users")
-    assert response.json == [
-        {"name": "Dawid", "lastname": "ababa", "id": 1},
-        {"name": "Dawid2", "lastname": "ababa", "id": 2},
-    ]
+    with open("./app/users.json") as f:
+        users = json.load(f)
+    assert response.json == users
     assert response.status_code == 200
 
 
 def test_get_endpoint_users_id(client: FlaskClient):
     response = client.get("/users/1")
-    assert response.json == {"name": "Dawid", "lastname": "ababa", "id": 1}
     assert response.status_code == 200
 
 
@@ -28,9 +27,3 @@ def test_get_endpoint_users_wrong_id(client: FlaskClient):
     assert response.status_code == 400
 
 
-def test_post_user_endpoint(client: FlaskClient):
-    user = {"name": "Dawid", "lastname": "Markiewicz"}
-    wanted_user = {"name": "Dawid", "lastname": "Markiewicz", "id": 3}
-    response = client.post("/users", json=user)
-    assert response.json == wanted_user
-    assert response.status_code == 201

@@ -48,9 +48,11 @@ class User_controller:
         for i in range(len(users)):
             if users[i]["id"] == user_id:
                 users[i][key] = user[key]
+                user = users[i]
+                print(user)
                 with open("./app/users.json", "w") as f:
                     json.dump(users, f)
-                return jsonify(users[i]), 204
+                return "", 204
         return "", 400
 
     @staticmethod
