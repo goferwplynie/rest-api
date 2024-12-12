@@ -1,29 +1,61 @@
-from app.app import app
 from pytest import fixture
-from flask.testing import FlaskClient
+from app.controller import User_controller
 import json
 
 
 @fixture
-def client() -> FlaskClient:
-    return app.test_client()
+def controller() -> User_controller:
+    return User_controller()
 
 
-def test_get_endpoint_users(client: FlaskClient):
-    response = client.get("/users")
-    with open("./app/users.json") as f:
+def reset_file():
+    with open("./app/users.json", "w") as f:
+        json.dump([], f)
+
+
+def test_get_all_users(controller: User_controller):
+    users = controller.get_user()
+
+    assert users == [{"id": 1, "name": "Dawid", "lastname": "Markiewicz"}]
+
+
+def test_get_user(controller: User_controller):
+    users = controller.get_user(1)
+
+    assert users == {"id": 1, "name": "Dawid", "lastname": "Markiewicz"}
+    reset_file()
+
+
+def test_get_user_wrong_id(controller: User_controller):
+    users = controller.get_user(999)
+
+    assert users == ("", 400)
+    reset_file()
+
+
+def test_add_user(controller: User_controller):
+
+    wanted_user = {"id": 1, "name": "Dawid", "lastname": "Markiewicz"}
+    user = {"name": "Dawid", "lastname": "Markiewicz"}
+
+    controller.add_user(user)
+
+    with open("./app/users.json", "r") as f:
         users = json.load(f)
-    assert response.json == users
-    assert response.status_code == 200
+
+    assert users[0] == wanted_user
+    reset_file()
 
 
-def test_get_endpoint_users_id(client: FlaskClient):
-    response = client.get("/users/1")
-    assert response.status_code == 200
+def test_update_user(controller: User_controller):
+    user = {"name": "Dawid", "lastname": "Markiewicz"}
 
+    controller.add_user(user)
 
-def test_get_endpoint_users_wrong_id(client: FlaskClient):
-    response = client.get("/users/398012")
-    assert response.status_code == 400
+    controller.update_user(1, {"name": "Wojciech"})
 
+    with open("./app/users.json", "r") as f:
+        users = json.load(f)
 
+    assert users[0] == {"id": 1, "name": "Wojciech", "lastname": "Markiewicz"}
+    reset_file()

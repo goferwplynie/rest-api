@@ -1,1 +1,7 @@
-[{"name": "A", "lastname": "ababa", "id": 1}, {"name": "Dawid2", "lastname": "ababa", "id": 2}, {"lastname": "Markiewicz", "name": "David", "id": 3}, {"lastname": "Markiewicz", "name": "David", "id": 4}, {"lastname": "Markiewicz", "name": "David", "id": 5}, {"lastname": "Oczkowski", "name": "Wojciech", "id": 6}, {"lastname": "Oczkowski", "name": "Wojciech", "id": 7}, {"lastname": "Oczkowski", "name": "Wojciech", "id": 8}]
+[
+    {
+        "name": "Dawid",
+        "lastname": "Markiewicz",
+        "id": 1
+    }
+]

@@ -11,17 +11,15 @@ class User_controller:
         if user_id != None:
             for user in users:
                 if user["id"] == user_id:
-                    return jsonify(user)
+                    return user
             return "", 400
-        return jsonify(users)
+        return users
 
     @staticmethod
     def add_user(user: dict) -> ResponseReturnValue:
         user_id = None
         with open("./app/users.json") as f:
             users = json.load(f)
-
-        users = sorted(users, key=lambda x: x["id"])
 
         if users:
             for i in range(len(users) - 1):
@@ -36,9 +34,10 @@ class User_controller:
 
         user["id"] = user_id
         users.append(user)
+        users = sorted(users, key=lambda x: x["id"])
         with open("./app/users.json", "w") as f:
             json.dump(users, f)
-        return jsonify(user), 201
+        return user, 201
 
     @staticmethod
     def update_user(user_id: int, user: dict) -> ResponseReturnValue:
